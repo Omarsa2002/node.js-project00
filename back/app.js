@@ -6,6 +6,7 @@ const registerRouter = require('./routes/registerRouters');
 const STATUS = require('./utils/HttpStatusText');
 const loginRouter = require('./routes/loginRoutres');
 const countryRouter = require('./routes/countryRouter');
+const favorateRouter = require('./routes/favorateRouter')
 
 const app = express();
 const url = process.env.MONGO_URL;
@@ -26,6 +27,7 @@ app.use(express.urlencoded({extended: true}));
 app.use('/register', registerRouter);
 app.use('/login', loginRouter);
 app.use('/countries', countryRouter);
+app.use('/favorate', favorateRouter);
 
 
 app.get('/', (req, res)=>{

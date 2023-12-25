@@ -45,14 +45,23 @@ const login = asyncWrapper(async (req, res, next)=>{
         return next(error);
     }
     const name  = user.name;
-    const token = await generateJwt({name: user.name, email: user.email, id: user.id});
+    const token = await generateJwt({name: user.name, id: user.id});
     const updatedToken = await User.updateOne({_id: user.id},{$set:{token: token}});
+    //console.log(updatedToken);
     return res.status(200).json({status: STATUS.success, data:{name, email, token}});
 })
+
+const allfavorates = async (req, res)=>{
+    const user = req.body
+    const favorates = await User.find({email: user.email});
+    res.json({status: STATUS.success, data: favorates.favorates});
+    
+}
 
 
 
 module.exports = {
     register,
-    login
+    login,
+    allfavorates
 }

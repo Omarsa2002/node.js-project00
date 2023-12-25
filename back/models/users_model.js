@@ -20,7 +20,20 @@ const userSchema = new mongoose.Schema(
         },
         token: {
             type:String
-        }
+        },
+        favorates:[
+            {
+                id: String,
+                img:{
+                    type: String,
+                    require: true
+                },
+                title:{
+                    type: String,
+                    require: true
+                }
+            }
+        ]
     }
 );
 
