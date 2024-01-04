@@ -47,11 +47,13 @@ document.querySelector('form').addEventListener('submit', function(event) {
             if(userData.status === 'Success'){
                 console.log(userData.data);
                 const userobj={
+                    _id: userData.data._id,
                     username: userData.data.name,
                     email: userData.data.email,
-                    token: userData.data.token
                 }
+                const token = userData.data.token;
                 localStorage.setItem("userobj" , JSON.stringify(userobj))
+                localStorage.setItem("token", JSON.stringify(token))
                 window.location.href = `../index.html`;
             }else{
                 let Error = `<i class="fa-solid fa-circle-exclamation pe-2 " style="color: #ffa200; font-size:20px"></i> ${userData.message} `;

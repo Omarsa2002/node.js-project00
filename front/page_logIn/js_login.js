@@ -46,6 +46,7 @@ document.querySelector('form').addEventListener('submit', function(event) {
             if(userData.status === 'Success'){
                 console.log(userData.data);
                 const userobj={
+                    _id: userData.data._id,
                     username: userData.data.name,
                     email: userData.data.email,
                 };

@@ -1,24 +1,28 @@
-const url = '/favorate';
+let userx = JSON.parse(localStorage.getItem("userobj"));
+const url = `/favorate/${userx._id}`;
 const data = { email: window.localStorage.getItem('userobj') };
 // Replace 'yourAccessToken' with your actual access token or JWT
 const accessToken = JSON.parse(window.localStorage.getItem('token'));
+//console.log(accessToken)
 // Creating headers with Authorization
 const headers = new Headers();
 
 headers.append('Content-Type', 'application/json');
 headers.append('Authorization', `Bearer ${accessToken}`);
+
 //console.log(headers.get('Authorization'));
 // Making a POST request with fetch
 fetch(url, {
-    //method: 'GET',
     headers: headers,
 })
 .then(response => response.json())
 .then(data => {
-    //console.log(data);
     if(data.status !== 'Success'){
         window.localStorage.clear();
         window.location.href = '../page_logIn/page_login.html';
+    }
+    else{
+        localStorage.setItem("favoriteNav", JSON.stringify(data.data));
     }
 
 })

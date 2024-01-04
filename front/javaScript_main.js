@@ -1,5 +1,22 @@
 
 // http://localhost:1000/countries
+const accessToken = JSON.parse(window.localStorage.getItem('token'));
+const headers = new Headers();
+headers.append('Content-Type', 'application/json');
+headers.append('Authorization', `Bearer ${accessToken}`);
+let user = JSON.parse(localStorage.getItem("userobj"));
+if(user){
+  fetch(`/favorate/${user._id}`, {
+    method: 'GET',
+    headers: headers,
+    //body: JSON.stringify(user),
+  })
+  .then(response => response.json())
+  .then(data=>{
+    console.log(data);
+    localStorage.setItem("favoriteNav", JSON.stringify(data.data));
+  })
+}
 
 const favoriteNav = JSON.parse(localStorage.getItem("favoriteNav")) || [];
 fetch('/countries').then((res)=>res.json())
@@ -33,7 +50,7 @@ fetch('/countries').then((res)=>res.json())
               </div>
             </div>
             `;
-          addFavorite(countries);
+          addFavorite(countries, user);
         });
         let countryImage = document.querySelectorAll(".countryImg");
         countryImage.forEach((image)=>{
@@ -81,7 +98,7 @@ function showToast(show, classToast, closeStyle) {
 
 let storage = JSON.parse(localStorage.getItem("userobj"));
 // let user = window.location.href.split('?=')[1];
-function addFavorite(country) {
+function addFavorite(country, user) {
   let favorite = document.querySelectorAll(".add-favorite");
   favorite.forEach((btn) => {
     btn.addEventListener("click", function () {
@@ -104,7 +121,21 @@ function addFavorite(country) {
             img: countries.img,
           });
           localStorage.setItem("favoriteNav", JSON.stringify(favoriteNav));
-          showToast(addToFavorite, normalClss, closeStyFavorite);
+          const fData = {
+            _id: user._id,
+            favorate: favoriteNav
+          }
+          fetch('/favorate', {
+            method: 'PUT',
+            headers: headers,
+            body: JSON.stringify(fData),
+          })
+          .then(response => response.json())
+          .then(data=>{
+            //console.log(data);
+            if(data.status === "Success")
+              showToast(addToFavorite, normalClss, closeStyFavorite);
+          })
         }
         btn.remove();
         parent.querySelector(".fav-heart").innerHTML +=
@@ -119,7 +150,7 @@ let logIn = document.querySelector(".login");
 let signIn = document.querySelector(".signin");
 let userInfo = document.querySelector(".user-info");
 let myUser = document.querySelector(".my-user");
-let user = JSON.parse(localStorage.getItem("userobj"));
+
 let logOut = document.querySelector(".logout");
 
 

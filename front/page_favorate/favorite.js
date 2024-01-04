@@ -24,10 +24,10 @@ let favorite=document.querySelector(".cart tbody")
 
     let removeEle=document.querySelectorAll(".remove")
 element();
-
+let user=JSON.parse(localStorage.getItem("userobj"))
     function element(){
 
-           removeEle.forEach((btn)=>{
+        removeEle.forEach((btn)=>{
             btn.addEventListener("click" , function(){
                 let conMsg=confirm("Do you sure deleting")
                 if(conMsg===true)
@@ -35,15 +35,30 @@ element();
                     const parent=this.closest(".cart-country")
                     console.log(parent);
                     const id=parent.dataset.id;
+                    const el = favoriteNav.find(ele=> ele.id === id )
+                    console.log(el._id);
                     favoriteNav=favoriteNav.filter(ele=>ele.id != id);
                     localStorage.setItem("favoriteNav" ,JSON.stringify(favoriteNav));
                     parent.remove();
+                    const accessToken = JSON.parse(window.localStorage.getItem('token'));
+                    const headers = new Headers();
+                    headers.append('Content-Type', 'application/json');
+                    headers.append('Authorization', `Bearer ${accessToken}`);
+                    fetch(`/favorate/delete/${el._id}`, {
+                        method: 'delete',
+                        headers: headers,
+                    })
+                    .then(response => response.json())
+                    .then(data=>{
+                        console.log(data);
+                        //localStorage.setItem("favoriteNav", JSON.stringify(data.data));
+                    })
                 }
                 else{
                     btn.preventDefault();
                 }
                 
-           })
+            })
         })
             let removeAll=document.querySelector(".remove-all")
             removeAll.addEventListener("click" , ()=>{
@@ -57,6 +72,18 @@ element();
                         localStorage.setItem("favoriteNav" ,JSON.stringify(favoriteNav));
                         favorite.innerHTML=``;
                         // console.log(favorite);
+                        const accessToken = JSON.parse(window.localStorage.getItem('token'));
+                        const headers = new Headers();
+                        headers.append('Content-Type', 'application/json');
+                        headers.append('Authorization', `Bearer ${accessToken}`);
+                        fetch(`/favorate/${user._id}`, {
+                            method: 'delete',
+                            headers: headers,
+                        })
+                        .then(response => response.json())
+                        .then(data=>{
+                            console.log(data);
+                        })
                     }
                     else{
                         removeAll.preventDefault();
@@ -66,12 +93,12 @@ element();
     }
 
 
-  
+
 let logIn=document.querySelector(".login")
 let signIn=document.querySelector(".signin")
 let userInfo=document.querySelector(".user-info")
 let myUser=document.querySelector(".my-user")
-let user=JSON.parse(localStorage.getItem("userobj"))
+
 let logOut=document.querySelector(".logout")
 userInfo.style.display="none"
 
